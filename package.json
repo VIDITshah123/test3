@@ -1,0 +1,22 @@
+{
+  "name": "rsvp-test-automation",
+  "version": "1.0.0",
+  "description": "Automated tests for RSVP Management System",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug",
+    "report": "npx playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "javascript",
+    "e2e-testing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
