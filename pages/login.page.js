@@ -24,9 +24,6 @@ class LoginPage {
     await this.page.waitForLoadState('networkidle');
   }
 
-  async togglePasswordVisibility() {
-    await this.passwordToggle.click();
-  }
 }
 
 module.exports = { LoginPage };
