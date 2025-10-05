@@ -13,7 +13,7 @@ test.describe('Authentication Tests', () => {
   test('successful login with valid credentials', async ({ page }) => {
     await loginPage.login('aman@gmail.com', 'Admin@123');
     await expect(page).toHaveURL(/dashboard/);
-    
+
     // Logout after successful login
     const dashboardPage = new DashboardPage(page);
     await dashboardPage.logout();
