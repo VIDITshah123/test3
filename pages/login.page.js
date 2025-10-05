@@ -9,7 +9,7 @@ class LoginPage {
     this.emailInput = page.getByPlaceholder('Enter username');
     this.passwordInput = page.getByPlaceholder('Enter password');
     this.loginButton = page.getByRole('button', { name: 'Sign In' });
-    this.errorMessage = page.locator('.error-message');
+    this.errorMessage = page.getByRole('alert');
   }
 
   async goto() {

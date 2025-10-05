@@ -30,9 +30,9 @@ test.describe('Authentication Tests', () => {
     await expect(loginPage.errorMessage).toHaveText('Invalid credentials');
   });
 
-  test('login with empty credentials', async () => {
-    await loginPage.login('', '');
-    await expect(loginPage.emailInput).toHaveAttribute('required', '');
-    await expect(loginPage.passwordInput).toHaveAttribute('required', '');
+  test('login with empty credentials', async ({ page }) => {
+    await loginPage.loginButton.click(); // Click login without filling fields
+    await expect(page.getByText('Username is required')).toBeVisible();
+    await expect(page.getByText('Password is required')).toBeVisible();
   });
 });
