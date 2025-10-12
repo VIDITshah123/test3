@@ -14,10 +14,10 @@ class EventsPage {
     this.descriptionInput = page.getByPlaceholder('Enter event description');
     this.statusDropdown = page.getByText('Status').locator('..').locator('select.form-select');
     this.eventTypeDropdown = page.getByText('Event Type').locator('..').locator('select.form-select');
-    this.startDateInput = page.getByLabel('Start Date');
-    this.endDateInput = page.getByLabel('End Date');
+    this.startDateInput = page.getByText('Start Date').locator('..').locator('input.form-control');
+    this.endDateInput = page.getByText('End Date').locator('..').locator('input.form-control');
     this.venuesDropdown = page.getByText('Venues').locator('..').getByRole('combobox');
-    this.saveEventButton = page.getByRole('button', { name: 'Create Event' });
+    this.saveEventButton = page.locator('button.btn-primary.glass-btn-primary:has-text("Create Event")');
     this.successMessage = page.getByText(/event (created|added) successfully/i);
     
     // Dropdown options
