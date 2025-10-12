@@ -48,22 +48,17 @@ test.describe('Add Event Tests', () => {
     await page.screenshot({ path: 'event-creation.png' });
     console.log('Screenshot saved as event-creation.png');
 
-    // Check for success message or redirect
-    try {
-      await expect(page).toHaveURL(/events\/list/, { timeout: 10000 });
-      console.log('Successfully redirected to events list');
-    } catch (error) {
-      console.error('Not redirected to events list. Current URL:', page.url());
-      throw error;
-    }
+    // 1. Assert that we are redirected to the new event's detail page
+    await expect(page).toHaveURL(/events\/\d+/, { timeout: 10000 });
+    console.log('Successfully redirected to the event detail page.');
 
-    // Verify the new event appears in the list
-    try {
-      await expect(page.getByText(uniqueEventName)).toBeVisible({ timeout: 10000 });
-      console.log('Event found in the list');
-    } catch (error) {
-      console.error('Event not found in the list. Page content:', await page.content());
-      throw error;
-    }
+    // 2. Navigate back to the events list page
+    await eventsPage.goto();
+    await expect(page).toHaveURL(/events\/list/);
+    console.log('Navigated back to the events list page.');
+
+    // 3. Verify the new event appears in the list
+    await expect(page.getByText(uniqueEventName)).toBeVisible({ timeout: 10000 });
+    console.log(`Event '${uniqueEventName}' found in the list.`);
   });
 });
