@@ -16,7 +16,7 @@ class EventsPage {
     this.eventTypeDropdown = page.getByText('Event Type').locator('..').locator('select.form-select');
     this.startDateInput = page.getByLabel('Start Date');
     this.endDateInput = page.getByLabel('End Date');
-    this.venuesDropdown = page.getByText('Venues').locator('..').locator('select.form-select');
+    this.venuesDropdown = page.getByText('Venues').locator('..').getByRole('combobox');
     this.saveEventButton = page.getByRole('button', { name: 'Create Event' });
     this.successMessage = page.getByText(/event (created|added) successfully/i);
     
@@ -37,6 +37,13 @@ class EventsPage {
     await this.eventNameInput.waitFor({ state: 'visible' });
   }
 
+  async selectFromCustomDropdown(dropdownLocator, optionText) {
+    await dropdownLocator.click();
+    const option = this.page.getByRole('option', { name: optionText });
+    await option.waitFor({ state: 'visible' });
+    await option.click();
+  }
+
   async addEvent(eventData) {
     // Use selectOption for standard <select> dropdowns
     await this.clientDropdown.selectOption({ label: eventData.client });
@@ -45,10 +52,12 @@ class EventsPage {
     await this.eventNameInput.fill(eventData.eventName);
     await this.descriptionInput.fill(eventData.description);
 
-    // Select status, event type, and venue
+    // Select status and event type (standard dropdowns)
     await this.statusDropdown.selectOption({ label: eventData.status });
     await this.eventTypeDropdown.selectOption({ label: eventData.eventType });
-    await this.venuesDropdown.selectOption({ label: eventData.venue });
+
+    // Use the custom handler for the Venues combobox
+    await this.selectFromCustomDropdown(this.venuesDropdown, eventData.venue);
 
     // Fill in dates
     await this.startDateInput.fill(eventData.startDate);
