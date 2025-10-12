@@ -34,8 +34,8 @@ test.describe('Add Event Tests', () => {
       status: 'In Progress',        // Update this to match an existing status
       eventType: 'Wedding', // Update this to match an existing event type
       venue: 'lodha garden',     // Update this to match an existing venue
-      startDate: '12/25/2025',
-      endDate: '12/26/2025'
+      startDate: '2025-12-25',
+      endDate: '2025-12-26'
     };
 
     console.log('Opening add event form...');

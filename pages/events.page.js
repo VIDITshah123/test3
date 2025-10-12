@@ -14,8 +14,10 @@ class EventsPage {
     this.descriptionInput = page.getByPlaceholder('Enter event description');
     this.statusDropdown = page.getByText('Status').locator('..').locator('select.form-select');
     this.eventTypeDropdown = page.getByText('Event Type').locator('..').locator('select.form-select');
-    this.startDateInput = page.getByText('Start Date').locator('..').locator('input.form-control');
-    this.endDateInput = page.getByText('End Date').locator('..').locator('input.form-control');
+    // Date inputs might be hidden or require a click to activate
+    this.startDateInput = page.locator('input[name="event_start_date"]');
+    this.endDateInput = page.locator('input[name="event_end_date"]');
+    
     this.venuesDropdown = page.getByText('Venues').locator('..').getByRole('combobox');
     this.saveEventButton = page.locator('button.btn-primary.glass-btn-primary:has-text("Create Event")');
     this.successMessage = page.getByText(/event (created|added) successfully/i);
@@ -59,7 +61,7 @@ class EventsPage {
     // Use the custom handler for the Venues combobox
     await this.selectFromCustomDropdown(this.venuesDropdown, eventData.venue);
 
-    // Fill in dates
+    // Fill in dates using the standard .fill() method
     await this.startDateInput.fill(eventData.startDate);
     await this.endDateInput.fill(eventData.endDate);
 
