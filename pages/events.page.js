@@ -9,15 +9,15 @@ class EventsPage {
     this.addEventButton = page.locator('button.btn-primary:has-text("Add Event")');
 
     // Locators for the 'Add Event' form
-    this.clientDropdown = page.locator('input[id="client"]');
+    this.clientDropdown = page.getByText('Client *').locator('..').locator('select.form-select');
     this.eventNameInput = page.getByPlaceholder('Enter event name');
     this.descriptionInput = page.getByPlaceholder('Enter event description');
-    this.statusDropdown = page.locator('input[id="status"]');
-    this.eventTypeDropdown = page.locator('input[id="eventType"]');
+    this.statusDropdown = page.getByText('Status').locator('..').locator('select.form-select');
+    this.eventTypeDropdown = page.getByText('Event Type').locator('..').locator('select.form-select');
     this.startDateInput = page.getByLabel('Start Date');
     this.endDateInput = page.getByLabel('End Date');
-    this.venuesDropdown = page.locator('input[id="venue"]');
-    this.saveEventButton = page.getByRole('button', { name: /save event/i });
+    this.venuesDropdown = page.getByText('Venues').locator('..').locator('select.form-select');
+    this.saveEventButton = page.getByRole('button', { name: 'Create Event' });
     this.successMessage = page.getByText(/event (created|added) successfully/i);
     
     // Dropdown options
@@ -37,28 +37,18 @@ class EventsPage {
     await this.eventNameInput.waitFor({ state: 'visible' });
   }
 
-  async selectFromDropdown(dropdownLocator, optionText) {
-    await dropdownLocator.click();
-    await this.page.keyboard.type(optionText);
-    await this.page.keyboard.press('Enter');
-  }
-
   async addEvent(eventData) {
-    // Select client
-    await this.selectFromDropdown(this.clientDropdown, eventData.client || 'Test Client');
+    // Use selectOption for standard <select> dropdowns
+    await this.clientDropdown.selectOption({ label: eventData.client });
     
     // Fill in basic info
     await this.eventNameInput.fill(eventData.eventName);
     await this.descriptionInput.fill(eventData.description);
 
-    // Select status
-    await this.selectFromDropdown(this.statusDropdown, eventData.status || 'Draft');
-    
-    // Select event type
-    await this.selectFromDropdown(this.eventTypeDropdown, eventData.eventType || 'Conference');
-    
-    // Select venue
-    await this.selectFromDropdown(this.venuesDropdown, eventData.venue || 'Main Hall');
+    // Select status, event type, and venue
+    await this.statusDropdown.selectOption({ label: eventData.status });
+    await this.eventTypeDropdown.selectOption({ label: eventData.eventType });
+    await this.venuesDropdown.selectOption({ label: eventData.venue });
 
     // Fill in dates
     await this.startDateInput.fill(eventData.startDate);
