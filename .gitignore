@@ -33,3 +33,9 @@ yarn-error.log*
 # System Files
 .DS_Store
 Thumbs.db
+
+#images
+*.png
+*.jpg
+*.jpeg
+*.gif
