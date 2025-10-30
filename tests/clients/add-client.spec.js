@@ -2,6 +2,8 @@ const { test, expect } = require('@playwright/test');
 const { LoginPage } = require('../../pages/login.page');
 const { ClientsPage } = require('../../pages/clients.page.js');
 const path = require('path');
+const fs = require('fs');
+const { parse } = require('csv-parse/sync');
 
 test.describe('Add Client Tests', () => {
   let loginPage;
@@ -19,6 +21,50 @@ test.describe('Add Client Tests', () => {
     // 2. Navigate to the Clients page
     await clientsPage.goto();
     await expect(page).toHaveURL(/clients/);
+  });
+
+  test('should add multiple clients from CSV file', async ({ page }) => {
+    // Read and parse the CSV file
+    const csvFilePath = path.resolve(process.cwd(), 'fixtures/sample-clients.csv');
+    console.log('Reading CSV file from:', csvFilePath);
+    const fileContent = fs.readFileSync(csvFilePath, 'utf8');
+    console.log('CSV content:', fileContent);
+    
+    // Parse CSV content with headers
+    const records = parse(fileContent, {
+      columns: true,
+      skip_empty_lines: true
+    });
+
+    // Process each client from the CSV
+    for (const record of records) {
+      // Create a unique client name by appending timestamp
+      const uniqueClientName = `${record['Client Name']} ${Date.now()}`;
+      
+      const clientData = {
+        clientName: uniqueClientName,
+        email: record['Email'].replace('@', `+${Date.now()}@`), // Make email unique
+        phone: record['Phone'],
+        website: record['Website'],
+        industry: record['Industry'],
+        address: record['Address'],
+        city: record['City'],
+        state: record['State'],
+        postalCode: record['Postal Code'],
+        country: record['Country'],
+        notes: record['Notes']
+      };
+
+      // Add the client
+      await clientsPage.openAddClientForm();
+      await clientsPage.addSingleClient(clientData);
+
+      // Verify success message
+      await expect(clientsPage.successMessage).toBeVisible();
+      
+      // Verify the new client appears in the list/table
+      await expect(page.getByText(uniqueClientName)).toBeVisible();
+    }
   });
 
   test('should add a single client successfully', async ({ page }) => {
